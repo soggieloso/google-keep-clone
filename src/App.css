@@ -331,6 +331,46 @@ main {
   opacity: 0;
   transition: opacity 0.2s;
 }
+/* [file name]: App.css - Add these styles */
+.reminder-section {
+  transition: all 0.3s ease;
+}
+
+.reminder-fields input:focus {
+  outline: none;
+  border-color: #1a73e8;
+}
+
+.reminder-badge {
+  transition: background-color 0.2s ease;
+}
+
+/* Notification permission banner */
+.notification-permission {
+  background: #e8f0fe;
+  border: 1px solid #d2e3fc;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin: 16px auto;
+  max-width: 600px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-permission button {
+  background: #1a73e8;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.notification-permission button:hover {
+  background: #1669d6;
+}
 
 .note:hover .note-footer {
   opacity: 1;
