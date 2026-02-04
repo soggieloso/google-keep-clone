@@ -131,7 +131,7 @@ main {
   padding-top: 16px;
   background-color: white;
   transition: width 0.3s ease;
-  overflow-x: hidden;
+  
 }
 
 .sidebar:hover {

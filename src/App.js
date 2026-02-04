@@ -1,53 +1,60 @@
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import NoteForm from "./components/NoteForm";
 import NotesList from "./components/NotesList";
 
-
-let reminderService = null;
-try {
-  
-  reminderService = require("./services/reminderService").default;
-} catch (error) {
-  console.warn("Reminder service not available, using mock service");
-  
-  reminderService = {
-    startReminderChecking: () => console.log("Reminder service: started (mock)"),
-    stopReminderChecking: () => console.log("Reminder service: stopped (mock)")
-  };
-}
-
 function App() {
   const [notes, setNotes] = useState([]);
+  const reminderServiceRef = useRef(null);
 
- 
   useEffect(() => {
-    const savedNotes = JSON.parse(localStorage.getItem('keep-notes') || '[]');
-    setNotes(savedNotes);
-    
+    const initializeApp = async () => {
+      // Load saved notes
+      const savedNotes = JSON.parse(localStorage.getItem("keep-notes") || "[]");
+      setNotes(savedNotes);
 
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
-    
-  
-    if (reminderService) {
-      reminderService.startReminderChecking();
-    }
-    
-    // Cleanup on unmount
+      // Request notification permission
+      if ("Notification" in window && Notification.permission === "default") {
+        await Notification.requestPermission();
+      }
+
+      // Try to initialize reminder service
+      try {
+        const ReminderService = (await import("./services/reminderService"))
+          .default;
+        reminderServiceRef.current = new ReminderService();
+        reminderServiceRef.current.startReminderChecking();
+        console.log("Reminder service started successfully");
+      } catch (error) {
+        console.warn(
+          "Could not load reminder service, using mock:",
+          error.message,
+        );
+        // Create a simple mock
+        reminderServiceRef.current = {
+          startReminderChecking: () =>
+            console.log("Mock: Reminder service started"),
+          stopReminderChecking: () =>
+            console.log("Mock: Reminder service stopped"),
+        };
+        reminderServiceRef.current.startReminderChecking();
+      }
+    };
+
+    initializeApp();
+
+    // Cleanup
     return () => {
-      if (reminderService) {
-        reminderService.stopReminderChecking();
+      if (reminderServiceRef.current?.stopReminderChecking) {
+        reminderServiceRef.current.stopReminderChecking();
       }
     };
   }, []);
 
-  
   useEffect(() => {
-    localStorage.setItem('keep-notes', JSON.stringify(notes));
+    localStorage.setItem("keep-notes", JSON.stringify(notes));
   }, [notes]);
 
   const addNote = (newNote) => {
@@ -55,7 +62,6 @@ function App() {
       id: Date.now(),
       ...newNote,
     };
-    
     setNotes((prevNotes) => [...prevNotes, noteWithId]);
   };
 
@@ -64,12 +70,10 @@ function App() {
   };
 
   const updateNoteReminder = (noteId, reminder) => {
-    setNotes(prevNotes => 
-      prevNotes.map(note => 
-        note.id === noteId 
-          ? { ...note, reminder } 
-          : note
-      )
+    setNotes((prevNotes) =>
+      prevNotes.map((note) =>
+        note.id === noteId ? { ...note, reminder } : note,
+      ),
     );
   };
 
@@ -80,8 +84,8 @@ function App() {
         <Sidebar />
         <div className="content">
           <NoteForm onAddNote={addNote} />
-          <NotesList 
-            notes={notes} 
+          <NotesList
+            notes={notes}
             onDeleteNote={deleteNote}
             onUpdateNoteReminder={updateNoteReminder}
           />

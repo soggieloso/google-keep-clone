@@ -4,8 +4,9 @@ function Navbar() {
   return (
     <nav>
       <div className="logo-area">
+        {/* Make sure this entire div is hoverable */}
         <div className="tooltip">
-          <span className="material-symbols-outlined hover">menu</span>
+          <span className="material-symbols-outlined">menu</span>
           <span className="tooltip-text">Main Menu</span>
         </div>
         <img
@@ -18,7 +19,7 @@ function Navbar() {
 
       <div className="search-area">
         <div className="tooltip">
-          <span className="material-symbols-outlined hover">search</span>
+          <span className="material-symbols-outlined">search</span>
           <span className="tooltip-text">Search</span>
         </div>
         <input type="text" placeholder="Search" />
@@ -26,28 +27,26 @@ function Navbar() {
 
       <div className="settings-area">
         <div className="tooltip">
-          <span className="material-symbols-outlined hover">refresh</span>
+          <span className="material-symbols-outlined">refresh</span>
           <span className="tooltip-text">Refresh</span>
         </div>
         <div className="tooltip">
-          <span className="material-symbols-outlined hover">view_agenda</span>
+          <span className="material-symbols-outlined">view_agenda</span>
           <span className="tooltip-text">View List</span>
         </div>
         <div className="tooltip">
-          <span className="material-symbols-outlined hover">settings</span>
+          <span className="material-symbols-outlined">settings</span>
           <span className="tooltip-text">Settings</span>
         </div>
       </div>
 
       <div className="profile-actions-area">
         <div className="tooltip">
-          <span className="material-symbols-outlined hover">apps</span>
+          <span className="material-symbols-outlined">apps</span>
           <span className="tooltip-text">Apps</span>
         </div>
         <div className="tooltip">
-          <span className="material-symbols-outlined hover">
-            account_circle
-          </span>
+          <span className="material-symbols-outlined">account_circle</span>
           <span className="tooltip-text">Accounts</span>
         </div>
       </div>
